@@ -106,10 +106,22 @@ $app->configure('app');
 |
 */
 
+$app->withEloquent();
+$app->withFacades();
+$app->configure('constants');
+
+$app->register(Dingo\Api\Provider\LumenServiceProvider::class);
+
+$app['Dingo\Api\Transformer\Factory']->setAdapter(function ($app) {
+    return new Dingo\Api\Transformer\Adapter\Fractal(new League\Fractal\Manager, 'include', ',');
+});
+
+
+
 $app->router->group([
-    'namespace' => 'App\Http\Controllers',
+    'namespace' => 'App\Api\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
+    require __DIR__.'/../app/Api/routes.php';
 });
 
 return $app;
