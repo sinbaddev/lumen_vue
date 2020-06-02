@@ -3,6 +3,7 @@
 namespace App\Api\Validators\Posts;
 
 use App\Api\Validators\AbstractValidator;
+use App\Api\Models\Post;
 
 class PostUpdateValidator extends AbstractValidator
 {
@@ -12,6 +13,7 @@ class PostUpdateValidator extends AbstractValidator
     protected function rules($params = [])
     {
         $rule = [
+            'id'           => 'required|integer|exists:' . Post::getTableName() . ',id',
             'title'       => 'required',
             'content'   => 'required',
         ];
@@ -22,6 +24,7 @@ class PostUpdateValidator extends AbstractValidator
     public function messages()
     {
         return [
+            'id.exists' => 'Post is not exists.',
             'title.required'     => 'Title is required',
             'content.required'        => 'Content is required',
         ];

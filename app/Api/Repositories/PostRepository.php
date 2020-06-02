@@ -49,7 +49,8 @@ class PostRepository extends BaseRepository
     {
         try {
             DB::beginTransaction();
-            $item = $this->model->where('id', $id)->update($data);
+            $is_update = $this->model->where('id', $id)->update($data);
+            $item = $this->model->findOrFail($id);
             DB::commit();
 
             return $item;
@@ -57,5 +58,22 @@ class PostRepository extends BaseRepository
             DB::rollBack();
             throw $exception;
         }
+    }
+
+    public function delete($id)
+    {
+        try {
+            DB::beginTransaction();
+            $this->model->findOrFail($id)->delete();
+            DB::commit();
+
+            return [
+                'message' => 'The post has been deleted.'
+            ];
+        } catch (\Exception $exception) {
+            DB::rollBack();
+            throw $exception;
+        }
+    
     }
 }
