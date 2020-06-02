@@ -2,12 +2,13 @@
 
 namespace App\Api\Models;
 
+use App\Api\Models\BaseModel;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Str;
-
-class Post extends Model
+class Post extends BaseModel
 {
     protected $table = 'posts';
+
+    protected $primaryKey = 'id';
     /**
      * The attributes that are mass assignable.
      *
@@ -23,13 +24,4 @@ class Post extends Model
      * @var array
      */
     protected $hidden = [];
-
-    public static function boot()
-    {
-        parent::boot();
-
-        static::saving(function ($model) {
-            $model->slug = Str::slug($model->title, '-');
-        });
-    }
 }

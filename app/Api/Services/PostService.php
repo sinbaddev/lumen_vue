@@ -5,6 +5,7 @@ namespace App\Api\Services;
 use App\Api\Repositories\PostRepository;
 use App\Api\Validators\Posts\PostCreateValidator;
 use App\Api\Validators\Posts\PostUpdateValidator;
+use App\Api\Helpers\Helper;
 
 class PostService
 {
@@ -29,27 +30,34 @@ class PostService
 
     public function store($input = [])
     {
-        $this->_validateCreatePost($input);
+        $this->_validateInputPost($input, new PostCreateValidator());
+
+        $input = Helper::addSlugToInput($input['title'], 'slug', $input);
         $newPost = $this->postRepository->create($input);
+
         return $newPost;
     }
 
     public function update($id, $input = [])
     {
-        $this->_validateUpdatePost($input);
-        $detailPost = $this->postRepository->update($input);
+        $input = Helper::addToArray($input, 'id', $id);
+        $this->_validateInputPost($input, new PostUpdateValidator());
+
+        $input = Helper::addSlugToInput($input['title'], 'slug', $input);
+        $detailPost = $this->postRepository->update($id, $input);
+
         return $detailPost;
     }
 
-    private function _validateCreatePost($input)
+    public function destroy($id)
     {
-        $validator = new PostCreateValidator($input);
-        $validator->validate($input);
+        $msg = $this->postRepository->delete($id);
+
+        return $msg;
     }
 
-    private function _validateUpdatePost($input)
+    private function _validateInputPost($input, $validator)
     {
-        $validator = new PostUpdateValidator($input);
         $validator->validate($input);
     }
 }

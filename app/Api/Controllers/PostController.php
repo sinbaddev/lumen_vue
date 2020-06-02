@@ -65,8 +65,20 @@ class PostController extends Controller
     {
         $input = $this->_getInputRequest();
         try {
-            $item = $this->postService->update(id, $input);
+            $item = $this->postService->update($id, $input);
             return $this->response->item($item, new PostDetailTransformer())->setStatusCode(IlluminateResponse::HTTP_CREATED);
+        } catch (Exception $e) {
+            return $this->response->errorBadRequest($e->getMessage());
+        }
+    }
+
+    public function destroy($id)
+    {
+        try {
+            $msg = $this->postService->destroy($id);
+            return $this->response->noContent()->setContent([
+                'data' => $msg,
+            ])->statusCode(IlluminateResponse::HTTP_OK);
         } catch (Exception $e) {
             return $this->response->errorBadRequest($e->getMessage());
         }
