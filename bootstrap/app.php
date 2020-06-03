@@ -121,6 +121,9 @@ $app['Dingo\Api\Transformer\Factory']->setAdapter(function ($app) {
 $app->router->group([
     'namespace' => 'App\Api\Controllers',
 ], function ($router) {
+    $router->get('/', function () use ($router) {
+        return $router->app->version();
+    });
     require __DIR__.'/../app/Api/routes.php';
 });
 
