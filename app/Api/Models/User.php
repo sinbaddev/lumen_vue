@@ -3,10 +3,10 @@
 namespace App\Api\Models;
 
 use App\Api\Models\BaseModel;
-use Illuminate\Database\Eloquent\Model;
-class Post extends BaseModel
+
+class User extends BaseModel
 {
-    protected $table = 'posts';
+    protected $table = 'users';
 
     protected $primaryKey = 'id';
     /**
@@ -15,7 +15,7 @@ class Post extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'title', 'slug', 'content'
+        'member_id', 'uid', 'brand', 'fullname'
     ];
 
     /**
@@ -24,6 +24,4 @@ class Post extends BaseModel
      * @var array
      */
     protected $hidden = [];
-    
-    public $timestamps = false;
 }

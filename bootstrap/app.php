@@ -105,17 +105,19 @@ $app->configure('app');
 | can respond to, as well as the controllers that may handle them.
 |
 */
-
-$app->withEloquent();
-$app->withFacades();
-$app->configure('constants');
-
 $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
 
 $app['Dingo\Api\Transformer\Factory']->setAdapter(function ($app) {
     return new Dingo\Api\Transformer\Adapter\Fractal(new League\Fractal\Manager, 'include', ',');
 });
 
+$app->withEloquent();
+$app->withFacades();
+$app->configure('constants');
+
+$app->middleware([
+    App\Http\Middleware\Cors::class
+ ]);
 
 
 $app->router->group([

@@ -3,10 +3,10 @@
 namespace App\Api\Models;
 
 use App\Api\Models\BaseModel;
-use Illuminate\Database\Eloquent\Model;
-class Post extends BaseModel
+
+class Jackpot extends BaseModel
 {
-    protected $table = 'posts';
+    protected $table = 'jackpots';
 
     protected $primaryKey = 'id';
     /**
@@ -15,7 +15,7 @@ class Post extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'title', 'slug', 'content'
+        'user_id', 'round_id', 'bet_amount', 'amount'
     ];
 
     /**
@@ -24,6 +24,14 @@ class Post extends BaseModel
      * @var array
      */
     protected $hidden = [];
-    
-    public $timestamps = false;
+
+    public function round()
+    {
+        return $this->belongsTo('App\Api\Models\Round');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo('App\Api\Models\User');
+    }
 }
