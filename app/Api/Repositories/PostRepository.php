@@ -50,8 +50,8 @@ class PostRepository extends BaseRepository
         try {
             DB::beginTransaction();
             $is_update = $this->model->where('id', $id)->update($data);
-            $item = $this->model->findOrFail($id);
             DB::commit();
+            $item = $this->model->findOrFail($id);
 
             return $item;
         } catch (\Exception $exception) {

@@ -66,7 +66,7 @@ class PostController extends Controller
         $input = $this->_getInputRequest();
         try {
             $item = $this->postService->update($id, $input);
-            return $this->response->item($item, new PostDetailTransformer())->setStatusCode(IlluminateResponse::HTTP_CREATED);
+            return $this->response->item($item, new PostDetailTransformer());
         } catch (Exception $e) {
             return $this->response->errorBadRequest($e->getMessage());
         }

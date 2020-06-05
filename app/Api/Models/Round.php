@@ -3,10 +3,10 @@
 namespace App\Api\Models;
 
 use App\Api\Models\BaseModel;
-use Illuminate\Database\Eloquent\Model;
-class Post extends BaseModel
+
+class Round extends BaseModel
 {
-    protected $table = 'posts';
+    protected $table = 'rounds';
 
     protected $primaryKey = 'id';
     /**
@@ -15,7 +15,7 @@ class Post extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'title', 'slug', 'content'
+        'user_id', 'amount', 'amount_win', 'bet_at', 'status'
     ];
 
     /**
@@ -24,6 +24,14 @@ class Post extends BaseModel
      * @var array
      */
     protected $hidden = [];
-    
-    public $timestamps = false;
+
+    public function user()
+    {
+        return $this->belongsTo('App\Api\Models\User');
+    }
+
+    public function bets()
+    {
+        return $this->hasMany('App\Api\Models\Bet');
+    }
 }

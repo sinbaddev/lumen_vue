@@ -16,14 +16,30 @@ $api = app('Dingo\Api\Routing\Router');
 
 $api->version('v1', function ($api) {
     $api->group(['prefix' => 'post', 'namespace' => 'App\Api\Controllers'], function ($api) {
-
-        $api->get('/123', function (){
-            return 1;
-        });
         $api->get('/', 'PostController@index');
         $api->get('/{id:[0-9]+}', ['uses' => 'PostController@show']);
         $api->post('/', ['uses' => 'PostController@store']);
         $api->put('/{id:[0-9]+}', ['uses' => 'PostController@update']);
         $api->delete('/{id:[0-9]+}', ['uses' => 'PostController@destroy']);
+    });
+
+    $api->group(['prefix' => 'round', 'namespace' => 'App\Api\Controllers'], function ($api) {
+        $api->get('/', ['uses' => 'RoundController@index']);
+        $api->get('/{id:[0-9]+}', ['uses' => 'RoundController@show']);
+    });
+
+    $api->group(['prefix' => 'bet', 'namespace' => 'App\Api\Controllers'], function ($api) {
+        $api->get('/', ['uses' => 'BetController@index']);
+        $api->get('/{id:[0-9]+}', ['uses' => 'BetController@show']);
+    });
+
+    $api->group(['prefix' => 'jackpot', 'namespace' => 'App\Api\Controllers'], function ($api) {
+        $api->get('/', ['uses' => 'JackpotController@index']);
+        $api->get('/{id:[0-9]+}', ['uses' => 'JackpotController@show']);
+    });
+
+    $api->group(['prefix' => 'transaction', 'namespace' => 'App\Api\Controllers'], function ($api) {
+        $api->get('/', ['uses' => 'TransactionController@index']);
+        $api->get('/{id:[0-9]+}', ['uses' => 'TransactionController@show']);
     });
 });
