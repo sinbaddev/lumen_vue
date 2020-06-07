@@ -14,7 +14,12 @@
 */
 $api = app('Dingo\Api\Routing\Router');
 
-$api->version('v1', function ($api) {
+$api->version('v1',function ($api) {
+    $api->group(['prefix' => 'auth', 'middleware' => 'api.auth', 'namespace' => 'App\Api\Controllers'], function ($api) {
+        $api->post('/login', 'AuthController@login');
+        $api->get('/me', 'AuthController@me');
+    });
+
     $api->group(['prefix' => 'post', 'namespace' => 'App\Api\Controllers'], function ($api) {
         $api->get('/', 'PostController@index');
         $api->get('/{id:[0-9]+}', ['uses' => 'PostController@show']);
@@ -26,6 +31,7 @@ $api->version('v1', function ($api) {
     $api->group(['prefix' => 'round', 'namespace' => 'App\Api\Controllers'], function ($api) {
         $api->get('/', ['uses' => 'RoundController@index']);
         $api->get('/{id:[0-9]+}', ['uses' => 'RoundController@show']);
+        $api->get('/get-amount', ['uses' => 'RoundController@getAmount']);
     });
 
     $api->group(['prefix' => 'bet', 'namespace' => 'App\Api\Controllers'], function ($api) {

@@ -24,4 +24,10 @@ class RoundService
         $detailBet = $this->roundRepository->detail($id, $input);
         return $detailBet;
     }
+
+    public function getAmount($input = [])
+    {
+        $amount = $this->roundRepository->getAmount($input);
+        return $amount;
+    }
 }

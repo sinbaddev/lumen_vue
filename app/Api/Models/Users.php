@@ -4,7 +4,7 @@ namespace App\Api\Models;
 
 use App\Api\Models\BaseModel;
 
-class User extends BaseModel
+class Users extends BaseModel
 {
     protected $table = 'users';
 
@@ -15,7 +15,7 @@ class User extends BaseModel
      * @var array
      */
     protected $fillable = [
-        'member_id', 'uid', 'brand', 'fullname'
+        'member_id', 'uid', 'brand', 'fullname', 'username'
     ];
 
     /**
@@ -23,5 +23,5 @@ class User extends BaseModel
      *
      * @var array
      */
-    protected $hidden = [];
+    protected $hidden = ['password'];
 }

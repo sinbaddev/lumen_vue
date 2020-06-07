@@ -8,6 +8,7 @@ use Illuminate\Http\Response as IlluminateResponse;
 use App\Api\Services\RoundService;
 use App\Api\Transformers\Rounds\RoundListTransformer;
 use App\Api\Transformers\Rounds\RoundDetailTransformer;
+use App\Api\Transformers\Rounds\RoundAmountTransformer;
 
 class RoundController extends Controller
 {
@@ -45,6 +46,17 @@ class RoundController extends Controller
         try {
             $item = $this->roundService->show($id, $input);
             return $this->response->item($item, new RoundDetailTransformer());
+        } catch (Exception $e) {
+            return $this->response->errorBadRequest($e->getMessage());
+        }
+    }
+
+    public function getAmount()
+    {
+        $input = $this->_getInputRequest();
+        try {
+            $item = $this->roundService->getAmount($input);
+            return $this->response->item($item, new RoundAmountTransformer());
         } catch (Exception $e) {
             return $this->response->errorBadRequest($e->getMessage());
         }

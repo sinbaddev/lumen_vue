@@ -27,7 +27,7 @@ class Round extends BaseModel
 
     public function user()
     {
-        return $this->belongsTo('App\Api\Models\User');
+        return $this->belongsTo('App\Api\Models\Users');
     }
 
     public function bets()

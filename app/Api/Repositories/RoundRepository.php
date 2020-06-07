@@ -16,7 +16,7 @@ class RoundRepository extends BaseRepository
 
     public function index($input)
     {
-        $limit = $input['limit'] ?? config('constants.DEFAULT_LIMIT');
+        $limit = $input['limit'] ?? 10;
 
         $query = $this->model->paginate($limit);
     
@@ -28,5 +28,19 @@ class RoundRepository extends BaseRepository
         $query = $this->model->findOrFail($id);
 
         return $query;
+    }
+
+    public function getAmount($input)
+    {
+        $query = $this->model->select([
+            DB::raw('SUM(amount) AS total_amount'),
+            DB::raw('SUM(amount_win) AS total_amount_win'),
+        ]);
+
+        if (!empty($input['month'])) {
+            $query->where(DB::raw('MONTH(bet_at)'), '=', $input['month']);
+        }
+
+        return $query->first();
     }
 }
