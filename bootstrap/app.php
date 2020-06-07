@@ -23,10 +23,10 @@ $app = new Laravel\Lumen\Application(
     dirname(__DIR__)
 );
 
-// $app->withFacades();
-
-// $app->withEloquent();
-
+$app->withFacades();
+$app->withEloquent();
+$app->configure('app');
+$app->configure('constants');
 /*
 |--------------------------------------------------------------------------
 | Register Container Bindings
@@ -47,7 +47,6 @@ $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
     App\Console\Kernel::class
 );
-
 /*
 |--------------------------------------------------------------------------
 | Register Config Files
@@ -58,9 +57,6 @@ $app->singleton(
 | the default version. You may register other files below as needed.
 |
 */
-
-$app->configure('app');
-
 /*
 |--------------------------------------------------------------------------
 | Register Middleware
@@ -111,14 +107,13 @@ $app['Dingo\Api\Transformer\Factory']->setAdapter(function ($app) {
     return new Dingo\Api\Transformer\Adapter\Fractal(new League\Fractal\Manager, 'include', ',');
 });
 
-$app->withEloquent();
-$app->withFacades();
-$app->configure('constants');
+// $app('Dingo\Api\Auth\Auth')->extend('jwt', function ($app) {
+//     return new Dingo\Api\Auth\Provider\JWT($app['Tymon\JWTAuth\JWTAuth']);
+//  });
 
 $app->middleware([
     App\Http\Middleware\Cors::class
- ]);
-
+]);
 
 $app->router->group([
     'namespace' => 'App\Api\Controllers',
