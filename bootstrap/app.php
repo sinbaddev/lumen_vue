@@ -68,14 +68,6 @@ $app->singleton(
 |
 */
 
-// $app->middleware([
-//     App\Http\Middleware\ExampleMiddleware::class
-// ]);
-
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
-
 /*
 |--------------------------------------------------------------------------
 | Register Service Providers
@@ -101,18 +93,19 @@ $app->singleton(
 | can respond to, as well as the controllers that may handle them.
 |
 */
+
 $app->register(Dingo\Api\Provider\LumenServiceProvider::class);
 
 $app['Dingo\Api\Transformer\Factory']->setAdapter(function ($app) {
     return new Dingo\Api\Transformer\Adapter\Fractal(new League\Fractal\Manager, 'include', ',');
 });
 
-// $app('Dingo\Api\Auth\Auth')->extend('jwt', function ($app) {
-//     return new Dingo\Api\Auth\Provider\JWT($app['Tymon\JWTAuth\JWTAuth']);
-//  });
-
 $app->middleware([
     App\Http\Middleware\Cors::class
+]);
+
+$app->routeMiddleware([
+    'jwt.auth' => App\Http\Middleware\JwtMiddleware::class,
 ]);
 
 $app->router->group([

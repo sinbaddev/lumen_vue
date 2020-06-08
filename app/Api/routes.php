@@ -12,14 +12,16 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+
 $api = app('Dingo\Api\Routing\Router');
 
-$api->version('v1',function ($api) {
-    $api->group(['prefix' => 'auth', 'middleware' => 'api.auth', 'namespace' => 'App\Api\Controllers'], function ($api) {
+$api->version('v1', function ($api) {
+    $api->group(['prefix' => 'auth',  'namespace' => 'App\Api\Controllers'], function ($api) {
         $api->post('/login', 'AuthController@login');
-        $api->get('/me', 'AuthController@me');
     });
+});
 
+$api->version('v1', ['middleware' => 'jwt.auth'],function ($api) {
     $api->group(['prefix' => 'post', 'namespace' => 'App\Api\Controllers'], function ($api) {
         $api->get('/', 'PostController@index');
         $api->get('/{id:[0-9]+}', ['uses' => 'PostController@show']);

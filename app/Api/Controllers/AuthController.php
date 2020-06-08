@@ -1,50 +1,80 @@
 <?php
-
 namespace App\Api\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use JWTAuth;
-
+use App\User;
+use Firebase\JWT\JWT;
+use Illuminate\Support\Facades\Hash;
 class AuthController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('api.auth', ['except' => ['login']]);
-    }
+    /**
+     * The request instance.
+     *
+     * @var \Illuminate\Http\Request
+     */
+    private $request;
 
-    public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
-
-        if ($token = JWTAuth::attempt($credentials)) {
-            return $this->respondWithToken($token);
-        }
-
-        return response()->json(['error' => 'Unauthorized'], 401);
-    }
-
-    public function me()
-    {
-        return response()->json($this->guard()->user());
-    }
-
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => $this->guard()->factory()->getTTL() * 60
-        ]);
+    /**
+     * Create a new controller instance.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return void
+     */
+    public function __construct(Request $request) {
+        $this->request = $request;
+        $this->middleware('jwt.auth', ['except' => ['login']]);
     }
 
     /**
-     * Get the guard to be used during authentication.
-     *
-     * @return \Illuminate\Contracts\Auth\Guard
+     * Create a new token.
+     * 
+     * @param  \App\User   $user
+     * @return string
      */
-    public function guard()
+    protected function jwt(User $user) {
+        $payload = [
+            'iss' => "lumen-jwt", // Issuer of the token
+            'sub' => $user->id, // Subject of the token
+            'iat' => time(), // Time when JWT was issued. 
+            'exp' => time() + 60*60 // Expiration time
+        ];
+
+        // As you can see we are passing `JWT_SECRET` as the second parameter that will 
+        // be used to decode the token in the future.
+        return JWT::encode($payload, env('JWT_SECRET'));
+    } 
+
+    /**
+     * Get a JWT via given credentials.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function login(User $user)
     {
-        return JWTAuth::guard();
+        $user = User::where('username', $this->request->input('username') ?? null)->first();
+
+        if (!$user) {
+            // You wil probably have some sort of helpers or whatever
+            // to make sure that you have the same response format for
+            // different kind of responses. But let's return the 
+            // below response for now.
+            return response()->json([
+                'error' => 'Username does not exist.'
+            ], 400);
+        }
+
+        // Verify the password and generate the token
+        if (Hash::check($this->request->input('password'), $user->password)) {
+            return response()->json([
+                'token' => $this->jwt($user),
+                'user' => $user
+            ], 200);
+        }
+
+        // Bad Request response
+        return response()->json([
+            'error' => 'Email or password is wrong.'
+        ], 400);
     }
 }
