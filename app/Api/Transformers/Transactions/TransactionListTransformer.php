@@ -14,7 +14,7 @@ class TransactionListTransformer extends TransformerAbstract
             'user_id' => object_get($transaction, 'user_id', 0),
             'fullname' => object_get($transaction, 'user.fullname', ''),
             'round' => object_get($transaction, 'round_id', null),
-            'amount'    => object_get($transaction, 'amount', null),
+            'amount'    => number_format(object_get($transaction, 'amount', 0), 0, ',', '.'),
             'ref_id'    => object_get($transaction, 'ref_id', null),
             'ip'    => object_get($transaction, 'ip', ''),
             'action'    => object_get($transaction, 'action', null),
