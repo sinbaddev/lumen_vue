@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\User;
 use Firebase\JWT\JWT;
 use Illuminate\Support\Facades\Hash;
+
 class AuthController extends Controller
 {
     /**
@@ -23,7 +24,6 @@ class AuthController extends Controller
      */
     public function __construct(Request $request) {
         $this->request = $request;
-        $this->middleware('jwt.auth', ['except' => ['login']]);
     }
 
     /**
@@ -60,7 +60,11 @@ class AuthController extends Controller
             // different kind of responses. But let's return the 
             // below response for now.
             return response()->json([
-                'error' => 'Username does not exist.'
+                "message" => "Provided token is expired.",
+                "errors" => [
+                    'username' => "Username does not exist."
+                ],
+                "status_code" => 400
             ], 400);
         }
 
@@ -74,7 +78,11 @@ class AuthController extends Controller
 
         // Bad Request response
         return response()->json([
-            'error' => 'Email or password is wrong.'
+            "message" => "Provided token is expired.",
+            "errors" => [
+                'username' => "Email or password is wrong."
+            ],
+            "status_code" => 400,
         ], 400);
     }
 }
